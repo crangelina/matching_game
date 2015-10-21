@@ -1,0 +1,59 @@
+/*CONTAINER*/
+
+body {
+	background-color: #2c3e50;
+}
+
+.container {
+	max-width: 820px;
+	min-height:720px;
+	margin: 0 auto;
+	padding: 0 30px;
+	background-color: #ecf0f1;
+	text-align: center;
+}
+
+
+/*BODY*/
+
+h1 {
+	font-family: 'Delius Unicase', cursive;
+	font-size: 36px;
+	color: #D0808D;
+	margin-bottom: 30px;
+
+}
+
+.startButton {
+	font-family: 'Quicksand', sans-serif;
+	display: block;
+	margin: 40px auto;
+
+}
+
+#board {
+	max-width: 610px;
+	margin: 0 auto;
+}
+
+.card {
+	height: 148px;
+	width: 148px;
+	margin: 0 2px;
+	display: inline-block;
+	border: 1px solid #cfd3d4;
+	background-image: url('../img/cattile.jpg');
+}
+
+.card img {
+	display: none;
+	height: 148px;
+	width: 148px;
+	vertical-align: baseline;
+}
+
+
+.card.flipped img {
+	display: inline-block;
+
+}
