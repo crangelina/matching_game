@@ -24,11 +24,24 @@ h1 {
 
 }
 
+h2 {
+	padding-top: 150px;
+	color: #2c3e50;
+	font-family: 'Quicksand', sans-serif;
+	display: none;
+}
+
 .startButton {
 	font-family: 'Quicksand', sans-serif;
 	display: block;
 	margin: 40px auto;
+	margin-top: 150px;
+}
 
+.restartButton {
+	font-family: 'Quicksand', sans-serif;
+	display: none;
+	margin: 40px auto;
 }
 
 #board {

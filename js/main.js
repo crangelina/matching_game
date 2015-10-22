@@ -1,107 +1,9 @@
-// var Game = {
-//   started: false,
-  
-  
-//   images: [
-//     'img/luxe1.jpg', 
-//     'img/luxe2.jpg',
-//     'img/luxe3.jpg',
-//     'img/luxe4.jpg',
-//     'img/luxe5.jpg',
-//     'img/luxe6.jpg',
-//     'img/luxe7.jpg',
-//     'img/luxe8.jpg',
-//   ],
-
-//   cards: [],
-  
-//   choices : [],
-  
- 
-//   init: function() {
-//     $startButton.on('click', function() {
-//       Game.start();
-//     });
-
-//     this.$board = $('#board');
-//     for (var i = 0; i < this.images.length; i++) {
-//       var firstCard = new Card(this.images[i]);
-//       var secondCard = new Card(this.images[i]);
-//       this.cards.push(firstCard);
-//       this.cards.push(secondCard);
-//     }
-   
-//   },
-  
-
-//   start : function() {
-//     $startButton.hide();
-//     this.started = true;
-//     this.renderCards();
-//     // Set started to true
-//     // Render cards grid
-//   },
-
-//   renderBoard: function() {
-//     this.$board.empty();
-
-//     // loop through array of cards {
-//       // set card instance in var
-//       // call renderCard and pass in card
-//       // append to $board
-//     //}
-
-
-
-//   }, 
-
-//   renderCard: function(cardInstance) {
-
-//   },
-
-//   decide : function() {
-//     // compaire choices[0] and choices[1]
-//     if (Game.choices[0].imageUrl === Game.choices[1].imageUrl) {
-//       Game.choices[0].matched = true;
-//       Game.choices[1].matched = true;
-//     } else {
-//       Game.choices[0].matched = false;
-//       Game.choices[1].matched = false;
-//     }
-
-//     Game.renderCards();
-
-//   }
-
-// }; //Game
-
-
-
-// //CARD CONSTRUCTOR
-// function Card(img) {
-//   this.imageUrl = img;
-//   this.matched = false;
-// }
-
-
-
-// //START BUTTON
-// $startButton = $('<button>');
-// $startButton.attr('type', 'button');
-// $startButton.addClass('btn btn-default startButton');
-// $startButton.text("Start");
-// $('h1').append($startButton);
-
-
-
-// Game.init();
-
-//----------------------------------
-//      NEW VERSION
-//----------------------------------
 
 var Game = {
   started: false,
+  preventClick: false,
+  counter: 0,
+
   
  
    images: [
@@ -124,17 +26,35 @@ var Game = {
     //start button
     this.$startButton = $('.startButton');
     Game.$startButton.on('click', Game.start);
+    //restart button
+    this.$restartButton = $('.restartButton');
+    Game.$restartButton.on('click', function() {
+        location.reload();
+    });
+    //you won text
+    this.$winnerText = $('h2');
     //board
     this.$board = $('#board');
+    //shuffle function
+    function shuffle(array) {
+      var m = array.length, t, i;
+      while (m) {
+        i = Math.floor(Math.random() * m--);
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+      }
+      return array;
+    }
     //cards[]
     for (var j = 0; j < Game.images.length; j++) {
       var img = Game.images[j];
       var card1 = new Card(img);
       var card2 = new Card(img);
-      var indexNum = Math.floor(Math.random() * 8) + 1;
-      Game.cards.splice(indexNum, 0, card1);
-      Game.cards.splice(indexNum, 0, card2);
+      Game.cards.push(card1);
+      Game.cards.push(card2);
     }
+    shuffle(Game.cards);
   },
   
   start : function() {
@@ -146,6 +66,14 @@ var Game = {
 
   renderBoard: function() {
     Game.$board.empty();
+
+    if (Game.counter == 8){
+      Game.$board.hide();
+      Game.$winnerText.show();
+      Game.$restartButton.show();
+    }
+     
+
     for (var i = 0; i < Game.cards.length; i++) {
       var cardModel = Game.cards[i];
       var $card = Game.renderCard(cardModel);
@@ -167,13 +95,17 @@ var Game = {
     
 
     $cardDiv.on('click', function(){
+      if (Game.preventClick == true) {
+        return;
+      }
       $(this).addClass('flipped');
       Game.choices.push(cardModel);
       if (Game.choices.length == 2) {
         Game.decide(cardModel);
-        setTimeout(function() {Game.renderBoard()}, 1500);
+        Game.preventClick = true;
+        setTimeout(function() {Game.renderBoard(); Game.preventClick = false}, 1500);
         Game.choices = [];
-      }
+      } 
     });
 
     return $cardDiv;
@@ -184,6 +116,7 @@ var Game = {
     if (Game.choices[0].imageUrl == Game.choices[1].imageUrl) {
           Game.choices[0].matched = true;
           Game.choices[1].matched = true;
+          Game.counter += 1;
     }
   } 
   
@@ -201,9 +134,6 @@ Game.init();
 //   PERSONAL NOTES
 //----------------------
 
-// images = []
-  // Links to all your images used
-  // loop through this and build TWO cards for each image
 
 // init()
   // Bind $startButton
@@ -227,4 +157,18 @@ Game.init();
   // and build a <div class="card"></div>
   // set the css background img to card.imageUrl
   // append to $board
+
+// preventClick
+  //set a flag to true saying timer is started (prevent click)
+  //preventClick=true
+  //in on click check preventClick
+  //if true then return
+  //after time and rerender board set it back to false
+  //disabling clicks in that 2 second period
+
+  //line before set time out
+  //preventClick=true
+  //after two seconds set it back to false
+  //in on click handler the first thing is if statement so if true
+  //then return. can return from function without doing anything
 
